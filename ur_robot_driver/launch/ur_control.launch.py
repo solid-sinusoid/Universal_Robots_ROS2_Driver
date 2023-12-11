@@ -218,6 +218,16 @@ def launch_setup(context, *args, **kwargs):
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
+        remappings=[
+            ('motion_control_handle/target_frame', 'target_frame'),
+            ('cartesian_motion_controller/target_frame', 'target_frame'),
+            ('cartesian_compliance_controller/target_frame', 'target_frame'),
+            ('cartesian_force_controller/target_wrench', 'target_wrench'),
+            ('cartesian_compliance_controller/target_wrench', 'target_wrench'),
+            ('cartesian_force_controller/ft_sensor_wrench', 'ft_sensor_wrench'),
+            ('cartesian_compliance_controller/ft_sensor_wrench', 'ft_sensor_wrench'),
+            ('force_torque_sensor_broadcaster/wrench', 'ft_sensor_wrench'),
+            ],
         parameters=[
             robot_description,
             update_rate_config_file,
@@ -230,6 +240,16 @@ def launch_setup(context, *args, **kwargs):
     ur_control_node = Node(
         package="ur_robot_driver",
         executable="ur_ros2_control_node",
+        remappings=[
+            ('motion_control_handle/target_frame', 'target_frame'),
+            ('cartesian_motion_controller/target_frame', 'target_frame'),
+            ('cartesian_compliance_controller/target_frame', 'target_frame'),
+            ('cartesian_force_controller/target_wrench', 'target_wrench'),
+            ('cartesian_compliance_controller/target_wrench', 'target_wrench'),
+            ('cartesian_force_controller/ft_sensor_wrench', 'ft_sensor_wrench'),
+            ('cartesian_compliance_controller/ft_sensor_wrench', 'ft_sensor_wrench'),
+            ('force_torque_sensor_broadcaster/wrench', 'ft_sensor_wrench'),
+            ],
         parameters=[
             robot_description,
             update_rate_config_file,
@@ -330,7 +350,11 @@ def launch_setup(context, *args, **kwargs):
         "speed_scaling_state_broadcaster",
         "force_torque_sensor_broadcaster",
     ]
-    controller_spawner_inactive_names = ["forward_position_controller"]
+    controller_spawner_inactive_names = [
+        "forward_position_controller",
+        "cartesian_compliance_controller",
+        "motion_control_handle"
+    ]
 
     controller_spawners = [controller_spawner(name) for name in controller_spawner_names] + [
         controller_spawner(name, active=False) for name in controller_spawner_inactive_names
